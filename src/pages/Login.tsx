@@ -14,15 +14,12 @@ import auth from '../config/firebase'
 type Props = {}
 
 const Signup:React.FC<Props> = (props: any) => {
-  // ここではuseStateというHooksの機能を利用している
-  // フォームに入力された値を保持する変数を宣言する形
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     auth.onAuthStateChanged(user => {
-      // ログインしている場合、ホームへリダイレクト
-      //user && props.history.push("/");
+      user && props.history.push("/");
     });
   }, []);
 

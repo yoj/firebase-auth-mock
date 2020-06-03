@@ -14,28 +14,20 @@ import auth from '../config/firebase'
 type Props = {}
 
 const Signup:React.FC<Props> = (props: any) => {
-  // ここではuseStateというHooksの機能を利用している
-  // フォームに入力された値を保持する変数を宣言する形
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  // useEffectもHooksの機能。ここではページがロードされたタイミングで
-  // ログイン状態かどうかを判定するイベントを発動する
   useEffect(() => {
     auth.onAuthStateChanged(user => {
-      // ログインしている場合、ホームへリダイレクト
-      //user && props.history.push("/");
+      user && props.history.push("/");
     });
   }, []);
 
   const singup = async () => {
     try {
-      // Firebaseにユーザーを作成する
       await auth.createUserWithEmailAndPassword(email, password);
-      // sendSignInLinkToEmail() を利用すると、メールアドレス認証のためのメールを送信することも可能
       props.history.push("/login");
     } catch (error) {
-      // ユーザー作成が失敗するとその内容をアラート表示
       alert(error.message);
     }
   }
