@@ -19,8 +19,6 @@ const Signup:React.FC<Props> = (props: any) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  // useEffectもHooksの機能。ここではページがロードされたタイミングで
-  // ログイン状態かどうかを判定するイベントを発動する
   useEffect(() => {
     auth.onAuthStateChanged(user => {
       // ログインしている場合、ホームへリダイレクト
@@ -28,16 +26,16 @@ const Signup:React.FC<Props> = (props: any) => {
     });
   }, []);
 
-  const singup = async () => {
-    try {
-      // Firebaseにユーザーを作成する
-      await auth.createUserWithEmailAndPassword(email, password);
-      // sendSignInLinkToEmail() を利用すると、メールアドレス認証のためのメールを送信することも可能
-      props.history.push("/login");
-    } catch (error) {
-      // ユーザー作成が失敗するとその内容をアラート表示
-      alert(error.message);
-    }
+  // login 
+  const login = async () => {
+    console.log("login event");
+    await auth.signInWithEmailAndPassword(email, password)
+      .then(result => {
+        props.history.push("/");
+      })
+      .catch(e => {
+        alert("メールアドレスまたはパスワードが間違っています。");
+      })
   }
 
   return (
@@ -46,7 +44,7 @@ const Signup:React.FC<Props> = (props: any) => {
         <Grid container>
           <Grid item md={4}></Grid>
           <Grid item md={4}>
-            SignIn form
+            login form
             <FormControl margin="normal" fullWidth>
               <TextField
                 style={{ marginTop: "0.5em", marginBottom: "0.5em" }}
@@ -74,17 +72,14 @@ const Signup:React.FC<Props> = (props: any) => {
             </FormControl>
             <FormControl fullWidth>
               <Button
-                fullWidth
                 variant="contained"
-                color="default"
-                onClick={singup}
+                color="primary"
+                fullWidth
+                onClick={login}
                 style={{ marginTop: "0.5em", marginBottom: "0.5em" }}
               >
-                Sign up
+                Login
               </Button>
-              <Typography align="center">
-                <Link href="/login">to login</Link>
-              </Typography>
             </FormControl>
           </Grid>
           <Grid item md={4}></Grid>
